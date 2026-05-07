@@ -1,4 +1,6 @@
-def build_prompt(resume_text: str, vacancy: str, options: dict) -> str:
+def build_prompt(resume_text: str, vacancy: str, matching_text: str,
+    explanation: str, options: dict) -> str:
+    
     instructions = []
 
     if options.get("highlightSkills", False):
@@ -62,9 +64,83 @@ Core rules:
 Specific instructions:
 {joined_instructions}
 
+Original Resume Text:
+{resume_text}
+
 Target Vacancy:
 {vacancy}
 
-Original Resume Text:
-{resume_text}
+Semantic Skill Matching:
+{matching_text}
+
+AI Match Analysis:
+{explanation}
+
 """.strip()
+
+
+def build_resume_extraction_prompt(text):
+    return f"""
+You are an information extraction system.
+
+Extract structured data from the resume.
+
+Do not include any explanation, markdown, or text outside JSON.
+
+Return ONLY valid JSON with this schema:
+
+{{
+  "skills": [],
+  "technologies": [],
+  "experience": [
+    {{
+      "role": "",
+      "company": "",
+      "duration": "",
+      "responsibilities": []
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "",
+      "institution": "",
+      "year": ""
+    }}
+  ],
+  "projects": [
+    {{
+      "name": "",
+      "description": "",
+      "technologies": []
+    }}
+  ],
+  "languages": []
+}}
+
+Resume:
+{text}
+"""
+
+def build_job_extraction_prompt(text):
+    return f"""
+You are an information extraction system.
+
+Extract structured data from the job description.
+
+Return ONLY valid JSON.
+
+Do not include any explanation, markdown, or text outside JSON.
+
+Schema:
+
+{{
+  "required_skills": [],
+  "preferred_skills": [],
+  "responsibilities": [],
+  "keywords": []
+}}
+
+Job Description:
+{text}
+"""
+
