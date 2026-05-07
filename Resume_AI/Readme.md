@@ -40,6 +40,7 @@ Tech Stack:
 How to run it?
 
 * Terminal -> project directory -> streamlit run app.py
+* Add .env with GOOGLE_API_KEY and CEREBRAS_API_KEY
 
 How it works?
 
